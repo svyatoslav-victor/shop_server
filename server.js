@@ -32,6 +32,8 @@ app.use(cors({
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use('/api', routes);
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log(`Server started at ${process.env.PORT}`)
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server started at ${PORT}`)
 });
