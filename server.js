@@ -1,6 +1,4 @@
-// require('dotenv').config();
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,7 +8,7 @@ const mongoString = process.env.DATABASE_URL;
 
 const routes = require('./routes/routes');
 
-mongoose.connect(mongoString, { useNewUrlParser: true });
+mongoose.connect(mongoString);
 const database = mongoose.connection;
 // console.log(database.collection('vasilkova_store_db'));
 
