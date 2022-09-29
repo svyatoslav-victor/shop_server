@@ -30,7 +30,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PATCH', 'DELETE']
 }));
 app.use('/uploads', express.static(__dirname + '/uploads'));
-app.use('/api', routes);
+app.use('/', routes);
 
 const PORT = process.env.PORT || 5000;
 
