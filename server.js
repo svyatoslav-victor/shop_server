@@ -1,7 +1,5 @@
 // require('dotenv').config();
-
-const dotenv = require("dotenv");
-
+import dotenv from 'dotenv';
 dotenv.config();
 
 const express = require('express');
@@ -12,7 +10,7 @@ const mongoString = process.env.DATABASE_URL;
 
 const routes = require('./routes/routes');
 
-mongoose.connect(mongoString);
+mongoose.connect(mongoString, { useNewUrlParser: true });
 const database = mongoose.connection;
 // console.log(database.collection('vasilkova_store_db'));
 
@@ -37,5 +35,5 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use('/api', routes);
 
 app.listen(process.env.PORT || 5000, () => {
-  console.log(`Server started at ${5000}`)
+  console.log(`Server started at ${process.env.PORT}`)
 });
