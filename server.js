@@ -33,5 +33,5 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use('/api', routes);
 
 app.listen(process.env.PORT || 5000, () => {
-  console.log(`Server started at ${process.env.PORT}`)
+  console.log(`Server started at ${process.env.PORT || 5000}`)
 });

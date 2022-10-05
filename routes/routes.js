@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const router = express.Router();
 const Model = require('../models/model');
+const Order = require('../models/order')
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -119,3 +120,71 @@ router.delete('/delete/:id', cors(), async (request, response) => {
 //     response.status(400).json({ message: error.message })
 //   }
 // })
+
+router.post('/createOrder', cors(), async (request, response) => {
+  console.log(request.body);
+  const data = new Order({
+    orderId: request.body.orderId,
+    productsDetails: request.body.productsDetails,
+    subtotal: request.body.subtotal,
+    customerInfo: request.body.customerInfo,
+    status: request.body.status
+  })
+
+  try {
+    const dataToSave = await data.save(); // saves an entry if it is entered precisely according to the created model
+    response.status(200).json(dataToSave);
+  } catch (error) {
+    response.status(400).json({
+      message: error.message
+    })
+  }
+})
+
+router.get('/getAllOrders', cors(), async (request, response) => {
+  try {
+    const data = await Order.find(); // returns all the data from the database
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      message: error.message
+    })
+  }
+})
+
+router.get('/getOneOrder/:id', cors(), async (request, response) => {
+  try {
+    const data = await Order.findById(request.params.id); // returns an entry corresponding to the specified id parameter
+    response.json(data)
+  } catch (error) {
+    response.status(500).json({
+      message: error.message
+    })
+  }
+})
+
+router.patch('/updateOrder/:id', cors(), async (request, response) => {
+  try {
+    const id = request.params.id; // the id of the object to update
+    const updatedData = request.body; // the data itself
+    const options = { new: true }; // specifies whether to return the updated data in the body or not
+
+    const result = await Order.findByIdAndUpdate(
+      id, updatedData, options
+    )
+
+    response.send(result)
+  } catch (error) {
+    response.status(400).json({ message: error.message })
+  }
+})
+
+router.delete('/deleteOrder/:id', cors(), async (request, response) => {
+  try {
+    const id = request.params.id; // the id of the entry to delete
+    const data = await Order.findByIdAndDelete(id);
+    response.send(`Entry with order ID ${data.orderId} has been deleted`)
+  } catch (error) {
+    response.status(400).json({ message: error.message })
+  }
+})
