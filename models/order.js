@@ -35,6 +35,9 @@ const orderSchema = new mongoose.Schema({
     required: true,
     type: Number
   },
+  orderDate: {
+    type: Date
+  },
   productsDetails: {
     required: true,
     type: [productsDetailsSchema]
@@ -53,6 +56,13 @@ const orderSchema = new mongoose.Schema({
       type: String
     },
     email: {
+      type: String
+    },
+    company: {
+      type: String
+    },
+    deliveryAddress: {
+      required: true,
       type: String
     }
   },
