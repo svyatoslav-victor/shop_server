@@ -125,6 +125,7 @@ router.post('/createOrder', cors(), async (request, response) => {
   console.log(request.body);
   const data = new Order({
     orderId: request.body.orderId,
+    orderDate: request.body.orderDate,
     productsDetails: request.body.productsDetails,
     subtotal: request.body.subtotal,
     customerInfo: request.body.customerInfo,

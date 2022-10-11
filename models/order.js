@@ -36,7 +36,8 @@ const orderSchema = new mongoose.Schema({
     type: Number
   },
   orderDate: {
-    type: Date
+    required: true,
+    type: String
   },
   productsDetails: {
     required: true,
