@@ -51,7 +51,7 @@ transporter.verify((error, success) => {
     : console.log(`Server is ready to take message: ${success}!`);
 });
 
-routes.post("/sendEmail", (request, response) => {
+routes.post("/sendEmail", cors(), (request, response) => {
   let mailOptions = {
     from: process.env.EMAIL,
     to: `${request.body.email}, ${process.env.EMAIL}`,
