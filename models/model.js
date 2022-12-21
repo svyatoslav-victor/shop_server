@@ -21,17 +21,14 @@ const dataSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  // season: {
-  //   type: String
-  // },
   inStock: {
     required: true,
     type: Boolean
   },
-  // subcategory: {
-  //   type: String
-  // },
   onSale: {
+    type: Boolean
+  },
+  isPopular: {
     type: Boolean
   },
   price: {

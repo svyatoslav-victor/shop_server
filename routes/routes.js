@@ -30,15 +30,12 @@ router.post('/post', cors(), uploadImg, async (request, response) => {
     category: request.body.category,
     productType: request.body.productType,
     inStock: JSON.parse(request.body.inStock),
-    // subcategory: request.body.subcategory,
     onSale: request.body.onSale,
     description: request.body.description,
     price: request.body.price,
     color: request.body.color,
     keywords: request.body.keywords.split(", "),
     images: request.files.map(file => file.originalname)
-    // images: request.body.images,
-    // season: request.body.season,
   })
 
   try {

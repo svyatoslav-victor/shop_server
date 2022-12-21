@@ -48,7 +48,7 @@ let transporter = nodemailer.createTransport({
 transporter.verify((error, success) => {
   error
     ? console.log(error)
-    : console.log(`Server is ready to take message: ${success}!`);
+    : console.log(`Server is ready for emails: ${success}!`);
 });
 
 routes.post("/sendEmail", cors(), (request, response) => {
