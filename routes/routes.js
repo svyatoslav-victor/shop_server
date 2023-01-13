@@ -1,11 +1,15 @@
+const { S3Client } = require('@aws-sdk/client-s3')
 const express = require('express');
 // const fse = require('fs-extra');
 const cors = require('cors');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
 
 const router = express.Router();
 const Model = require('../models/model');
 const Order = require('../models/order')
+
+const s3 = new S3Client();
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -16,12 +20,22 @@ const storage = multer.diskStorage({
   }
 });
 
-const uploadImg = multer({ storage: storage }).any();
+const uploadImg = multer({
+  storage: multerS3({
+    s3: s3,
+    acl: 'public-read',
+    bucket: process.env.S3_BUCKET_NAME,
+    key: function (req, file, cb) {
+      console.log(file);
+      cb(null, file.originalname);
+    }
+  })
+})
 
 module.exports = router;
 
 // Post Method
-router.post('/post', cors(), uploadImg, async (request, response) => {
+router.post('/post', cors(), uploadImg.array(), async (request, response) => {
   console.log(request.body, request.files);
   const data = new Model({
     productId: request.body.productId,

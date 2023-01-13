@@ -30,7 +30,7 @@ app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PATCH', 'DELETE']
 }));
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use('/uploads', express.static(process.env.S3_ENDPOINT + '/uploads'));
 app.use('/api', routes);
 
 let transporter = nodemailer.createTransport({
