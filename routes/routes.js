@@ -1,6 +1,8 @@
-const { S3Client } = require('@aws-sdk/client-s3')
+const aws = require("aws-sdk");
 const express = require('express');
-// const fse = require('fs-extra');
+
+require('dotenv').config();
+
 const cors = require('cors');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
@@ -9,16 +11,28 @@ const router = express.Router();
 const Model = require('../models/model');
 const Order = require('../models/order')
 
-const s3 = new S3Client();
-
-const storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './uploads/');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.originalname);
-  }
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: "eu-west-2"
 });
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, callback) {
+//     callback(null, './uploads/');
+//   },
+//   filename: function (req, file, callback) {
+//     callback(null, file.originalname);
+//   }
+// });
+
+const storage = multer.memoryStorage({
+  destination: function (req, file, cb) {
+    cb(null, '')
+  }
+})
+
+const upload = multer({ storage: storage });
 
 const uploadImg = multer({
   storage: multerS3({
@@ -32,12 +46,34 @@ const uploadImg = multer({
   })
 })
 
+const s3Upload = async (files) => {
+  const s3 = new aws.S3();
+
+  const params = files.map(file => {
+    return {
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: file.originalname,
+      Body: file.buffer,
+      acl: 'public-read-write'
+    }
+  });
+
+  const results = await Promise.all(
+    params.map((param) => s3.upload(param).promise())
+  );
+
+  return results;
+}
+
 module.exports = router;
 
 // Post Method
-router.post('/post', cors(), uploadImg.array('images', 30), async (request, response) => {
+router.post('/post', cors(), upload.array('images', 30), async (request, response) => {
   console.log(request.body, request.files);
-  const data = new Model({
+
+  const results = await s3Upload(request.files);
+
+  const product = new Model({
     productId: request.body.productId,
     name: request.body.name,
     brand: request.body.brand,
@@ -49,11 +85,11 @@ router.post('/post', cors(), uploadImg.array('images', 30), async (request, resp
     price: request.body.price,
     color: request.body.color,
     keywords: request.body.keywords.split(", "),
-    images: request.files.map(file => file.originalname)
-  })
+    images: results.map(file => file.originalname)
+  });
 
   try {
-    const dataToSave = await data.save(); // saves an entry if it is entered precisely according to the created model
+    const dataToSave = product.save(); // saves an entry if it is entered precisely according to the created model
     response.status(200).json(dataToSave);
   } catch (error) {
     response.status(400).json({
