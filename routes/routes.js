@@ -35,7 +35,7 @@ const uploadImg = multer({
 module.exports = router;
 
 // Post Method
-router.post('/post', cors(), uploadImg.array(), async (request, response) => {
+router.post('/post', cors(), uploadImg.array('images', 30), async (request, response) => {
   console.log(request.body, request.files);
   const data = new Model({
     productId: request.body.productId,
