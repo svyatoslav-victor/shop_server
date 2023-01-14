@@ -52,7 +52,7 @@ const s3Upload = async (files) => {
   const params = files.map(file => {
     return {
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: file.originalname,
+      Key: `uploads/${file.originalname}`,
       Body: file.buffer,
       acl: 'public-read-write'
     }
@@ -85,7 +85,7 @@ router.post('/post', cors(), upload.array('images', 30), async (request, respons
     price: request.body.price,
     color: request.body.color,
     keywords: request.body.keywords.split(", "),
-    images: results.map(file => file.originalname)
+    images: request.files.map(file => file.originalname)
   });
 
   try {
