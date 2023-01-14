@@ -54,7 +54,6 @@ const s3Upload = async (files) => {
       Bucket: process.env.S3_BUCKET_NAME,
       Key: `uploads/${file.originalname}`,
       Body: file.buffer,
-      acl: 'public-read-write',
       ContentType: 'image/png',
     }
   });
