@@ -11,7 +11,6 @@ const routes = require('./routes/routes');
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
-// console.log(database.collection('vasilkova_store_db'));
 
 database.on('error', (error) => {
   console.log(error);
