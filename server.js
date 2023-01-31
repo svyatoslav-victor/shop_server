@@ -56,6 +56,7 @@ routes.post("/sendEmail", cors(), (request, response) => {
     to: `${request.body.email}, ${process.env.EMAIL}`,
     subject: `${request.body.subject}`,
     html: `${request.body.html}`,
+    attachments: request.body.attachments
   };
   
   transporter.sendMail(mailOptions, (error, data) => {
